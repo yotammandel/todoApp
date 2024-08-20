@@ -5,7 +5,6 @@ import {
   Pressable,
   View,
   Text,
-  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { addTask } from "../api";
@@ -18,17 +17,17 @@ export default function AddTask({ onAddTask }) {
     if (newTask.trim() !== "") {
       try {
         const addedTask = await addTask(newTask);
-        // Ensure addedTask is in the expected format
+        
         if (addedTask && typeof addedTask === "object") {
           onAddTask(addedTask);
           setNewTask("");
-          Alert.alert("Success", "Task added successfully!");
+         
         } else {
           throw new Error("Invalid task data returned from server");
         }
       } catch (error) {
         console.error("Error adding task:", error);
-        Alert.alert("Error", "Failed to add task. Please try again.");
+       
       }
     }
   };
@@ -79,8 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 10,
     paddingRight: 10,
-    borderColor: "#5E60CE", // Choose a noticeable color when focused
-    borderWidth: 1, // Set border width
+    borderColor: "#5E60CE", 
+    borderWidth: 1, 
   },
   button: {
     margin: 5,

@@ -7,7 +7,7 @@ const api = axios.create({
 
 export const testAPIConnection = async () => {
   try {
-    console.log("Testing API connection...");
+    
     const response = await api.get("todos/test");
     console.log("API test successful:", response.data);
     return response.data;
@@ -20,7 +20,7 @@ export const testAPIConnection = async () => {
 export const getTasks = async () => {
   try {
     const response = await api.get("/todos");
-    console.log("Tasks fetched:", response.data);
+ ;
     return response.data;
   } catch (error) {
     console.error("Error fetching tasks:", error);

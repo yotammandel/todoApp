@@ -15,8 +15,7 @@ export default function Task({ task, onDelete, onToggle }) {
     setIsChecked(newCheckedState);
 
     try {
-      console.log("Toggling checkbox, task ID:", task._id);
-      await onToggle(task._id, newCheckedState); // Call the onToggle function passed from TaskList
+      await onToggle(task._id, newCheckedState);
     } catch (error) {
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -25,7 +24,7 @@ export default function Task({ task, onDelete, onToggle }) {
       } else {
         console.error("Error message:", error.message);
       }
-      setIsChecked(!newCheckedState); // Revert state if the update fails
+      setIsChecked(!newCheckedState);
     }
   };
 
@@ -46,7 +45,7 @@ export default function Task({ task, onDelete, onToggle }) {
           {task.title}
         </Text>
       </View>
-      <Pressable onPress={() => onDelete(task._id)} style={{ alignSelf: "flex-start" }}>
+      <Pressable onPress={() => onDelete(task._id)}>
         <MaterialCommunityIcons
           name="trash-can-outline"
           size={24}
@@ -68,12 +67,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#7F7F7F",
     borderRadius: 10,
-    minHeight: 70,
   },
   checkbox: {
     borderColor: "#4ca0d3",
     borderRadius: 15,
-    alignSelf: "flex-start",
   },
   taskText: {
     color: "white",
