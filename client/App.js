@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, StatusBar } from "react-native";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
-import { getTasks, addTask } from "./api";
+import { getTasks, addTask, testAPIConnection } from "./api";
+import { Button } from "react-native";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
@@ -17,19 +18,12 @@ export default function App() {
       setTasks(fetchedTasks);
     } catch (error) {
       console.error("Error fetching tasks:", error);
-      Alert.alert("Error", "Failed to fetch tasks. Please try again.");
+      console.error("Error", "Failed to fetch tasks. Please try again.");
     }
   };
 
-  const handleAddTask = async (newTaskText) => {
-    try {
-      const taskData = { title: newTaskText, completed: false };
-      const addedTask = await addTask(taskData);
-      setTasks((prevTasks) => [addedTask, ...prevTasks]);
-    } catch (error) {
-      console.error("Error adding task:", error);
-      Alert.alert("Error", "Failed to add task. Please try again.");
-    }
+  const handleAddTask = (newTask) => {
+    setTasks((prevTasks) => [newTask, ...prevTasks]);
   };
 
   return (
@@ -38,10 +32,11 @@ export default function App() {
       <View style={styles.grayBackground} />
       <View style={styles.container}>
         <Image source={require("./assets/logo.png")} style={styles.logo} />
-        <AddTask setTasks={setTasks} tasks={tasks} />
+        <AddTask onAddTask={handleAddTask} />
         <TaskList setTasks={setTasks} tasks={tasks} />
         <StatusBar style="auto" />
       </View>
+      <Button title="Test API Connection" onPress={testAPIConnection} />
     </View>
   );
 }

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expoapp",
+    "name": "todoApp",
     "slug": "expoapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,6 +10,9 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "packagerOpts": {
+      "proxy": "http://localhost:5000"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -31,6 +34,7 @@
         "projectId": "cebd34c7-d0ba-4867-bf72-e8e6a9c9551b"
       }
     },
-    "owner": "ranedelman"
+    
+    "owner": "yotam_mandel"
   }
 }
