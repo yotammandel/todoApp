@@ -1,17 +1,43 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Image, StatusBar } from 'react-native';
-import TaskList from './components/TaskList';
-import AddTask from './components/AddTask';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Image, StatusBar } from "react-native";
+import TaskList from "./components/TaskList";
+import AddTask from "./components/AddTask";
+import { getTasks, addTask } from "./api";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const fetchedTasks = await getTasks();
+      setTasks(fetchedTasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      Alert.alert("Error", "Failed to fetch tasks. Please try again.");
+    }
+  };
+
+  const handleAddTask = async (newTaskText) => {
+    try {
+      const taskData = { title: newTaskText, completed: false };
+      const addedTask = await addTask(taskData);
+      setTasks((prevTasks) => [addedTask, ...prevTasks]);
+    } catch (error) {
+      console.error("Error adding task:", error);
+      Alert.alert("Error", "Failed to add task. Please try again.");
+    }
+  };
 
   return (
     <View style={styles.fullContainer}>
       <View style={styles.blackBackground} />
       <View style={styles.grayBackground} />
       <View style={styles.container}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
+        <Image source={require("./assets/logo.png")} style={styles.logo} />
         <AddTask setTasks={setTasks} tasks={tasks} />
         <TaskList setTasks={setTasks} tasks={tasks} />
         <StatusBar style="auto" />
@@ -25,31 +51,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   blackBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     height: 250,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   grayBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 190,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#262626',
+    backgroundColor: "#262626",
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   logo: {
     width: 165,
     height: 45,
-    position: 'absolute',
+    position: "absolute",
     top: 80,
     marginBottom: 50,
   },

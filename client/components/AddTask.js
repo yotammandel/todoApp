@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { TextInput, StyleSheet, Pressable, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { addTask } from "../api";
 
 export default function AddTask({ tasks, setTasks }) {
   const [newTask, setNewTask] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
-  const onPress = () => {
+  const onPress = async () => {
     if (newTask.trim() !== "") {
-      const taskObj = {
-        id: new Date().getTime().toString(), // Use timestamp as a simple ID
-        text: newTask,
-        completed: false,
-      };
-      setTasks([taskObj, ...tasks]);
-      setNewTask("");
+      try {
+        const taskObj = {
+          text: newTask,
+          completed: false,
+        };
+        const addedTask = await addTask(taskObj);
+        onAddTask(addedTask); 
+        setNewTask("");
+      } catch (error) {
+        Alert.alert("Error", "Failed to add task. Please try again.");
+        console.error("Error adding task:", error);
+      }
     }
   };
 
