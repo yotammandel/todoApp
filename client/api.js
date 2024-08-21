@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.1.174:5000/api",
+  baseURL: process.env.BASEURL,
   timeout: 10000,
 });
 
 export const testAPIConnection = async () => {
   try {
-    
     const response = await api.get("todos/test");
     console.log("API test successful:", response.data);
     return response.data;
@@ -20,7 +19,6 @@ export const testAPIConnection = async () => {
 export const getTasks = async () => {
   try {
     const response = await api.get("/todos");
- ;
     return response.data;
   } catch (error) {
     console.error("Error fetching tasks:", error);

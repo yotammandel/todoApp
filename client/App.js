@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, StatusBar } from "react-native";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
-import { getTasks, addTask, testAPIConnection } from "./api";
-import { Button } from "react-native";
+import { getTasks } from "./api";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);
@@ -18,7 +17,6 @@ export default function App() {
       setTasks(fetchedTasks);
     } catch (error) {
       console.error("Error fetching tasks:", error);
-      console.error("Error", "Failed to fetch tasks. Please try again.");
     }
   };
 
@@ -36,7 +34,6 @@ export default function App() {
         <TaskList setTasks={setTasks} tasks={tasks} />
         <StatusBar style="auto" />
       </View>
-      <Button title="Test API Connection" onPress={testAPIConnection} />
     </View>
   );
 }
