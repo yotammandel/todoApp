@@ -27,18 +27,19 @@ router.post("/", async (req, res) => {
 });
 
 // Update a todo
-router.patch("/api/todos/:id", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+    const todo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
     }
-    res.json(task);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating task" });
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
-
 
 // Delete a todo
 router.delete("/:id", async (req, res) => {

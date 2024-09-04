@@ -37,6 +37,21 @@ export default function TaskList({ tasks, setTasks }) {
     }
   };
 
+  const handleEdit = async (id, newTitle) => {
+    try {
+      const updatedTask = await updateTask(id, { title: newTitle });
+      const updatedTasks = tasks.map((task) => {
+        if (task._id === id) {
+          return { ...task, title: newTitle };
+        }
+        return task;
+      });
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Error editing task:", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.counters}>
@@ -96,7 +111,8 @@ export default function TaskList({ tasks, setTasks }) {
               key={task._id}
               task={task}
               onToggle={handleToggle}
-              onDelete={handleDelete} // Pass handleDelete to Task component
+              onDelete={handleDelete}
+              onEdit={handleEdit}
             />
           ))}
         </ScrollView>

@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, StatusBar } from "react-native";
 import TaskList from "./components/TaskList";
 import AddTask from "./components/AddTask";
 import { getTasks } from "./api";
+import { BASEURL } from "@env";
 
 export default function App() {
   const [tasks, setTasks] = useState([]);

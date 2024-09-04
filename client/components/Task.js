@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import Checkbox from "expo-checkbox";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function Task({ task, onDelete, onToggle }) {
+const MAX_TITLE_LENGTH = 30; // Adjust this value as needed
+
+export default function Task({ task, onDelete, onToggle, onEdit }) {
   const [isChecked, setIsChecked] = useState(task.completed || false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     setIsChecked(task.completed);
-  }, [task.completed]);
+    setEditedTitle(task.title);
+  }, [task.completed, task.title]);
 
   const toggleCheckbox = async () => {
     const newCheckedState = !isChecked;
@@ -17,19 +23,62 @@ export default function Task({ task, onDelete, onToggle }) {
     try {
       await onToggle(task._id, newCheckedState);
     } catch (error) {
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      } else {
-        console.error("Error message:", error.message);
-      }
+      console.error("Error toggling task:", error);
       setIsChecked(!newCheckedState);
     }
   };
 
+  const handleLongPress = () => {
+    setIsEditing(true);
+  };
+
+  const handleEditSubmit = () => {
+    onEdit(task._id, editedTitle);
+    setIsEditing(false);
+  };
+
+  const toggleExpand = () => {
+    if (task.title.length > MAX_TITLE_LENGTH) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  const renderTaskTitle = () => {
+    if (isEditing) {
+      return (
+        <TextInput
+          style={styles.input}
+          value={editedTitle}
+          onChangeText={setEditedTitle}
+          onBlur={handleEditSubmit}
+          autoFocus
+          multiline
+        />
+      );
+    }
+
+    if (task.title.length <= MAX_TITLE_LENGTH || isExpanded) {
+      return (
+        <Text style={[styles.taskText, isChecked && styles.checkedText]}>
+          {task.title}
+        </Text>
+      );
+    }
+
+    return (
+      <Text style={[styles.taskText, isChecked && styles.checkedText]}>
+        {`${task.title.substring(0, MAX_TITLE_LENGTH)}... `}
+        <Text style={styles.readMore}>Read more</Text>
+      </Text>
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable
+      onLongPress={handleLongPress}
+      onPress={toggleExpand}
+      style={styles.container}
+    >
       <Checkbox
         value={isChecked}
         style={styles.checkbox}
@@ -41,9 +90,7 @@ export default function Task({ task, onDelete, onToggle }) {
           { flexDirection: "row", flexWrap: "wrap", width: "70%" },
         ]}
       >
-        <Text style={[styles.taskText, isChecked && styles.checkedText]}>
-          {task.title}
-        </Text>
+        {renderTaskTitle()}
       </View>
       <Pressable onPress={() => onDelete(task._id)}>
         <MaterialCommunityIcons
@@ -52,7 +99,7 @@ export default function Task({ task, onDelete, onToggle }) {
           color="#7F7F7F"
         />
       </Pressable>
-    </View>
+    </Pressable>
   );
 }
 
@@ -80,5 +127,16 @@ const styles = StyleSheet.create({
   checkedText: {
     textDecorationLine: "line-through",
     opacity: 0.5,
+  },
+  input: {
+    flex: 1,
+    color: "white",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#4ca0d3",
+  },
+  readMore: {
+    color: "#4ca0d3",
+    fontWeight: "bold",
   },
 });

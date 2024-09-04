@@ -1,7 +1,8 @@
 import axios from "axios";
+import { BASEURL } from "@env";
 
 const api = axios.create({
-  baseURL: process.env.BASEURL,
+  baseURL: BASEURL,
   timeout: 10000,
 });
 
@@ -21,7 +22,7 @@ export const getTasks = async () => {
     const response = await api.get("/todos");
     return response.data;
   } catch (error) {
-    console.error("Error fetching tasks:", error);
+    console.error("Error fetching tasks:", error.message);
     if (error.response && error.response.status === 404) {
       return [];
     }
@@ -41,6 +42,7 @@ export const addTask = async (title) => {
 
 export const updateTask = async (id, updates) => {
   try {
+    console.log(`Updating task with ID: ${id}, Updates:`, updates);
     const response = await api.patch(`/todos/${id}`, updates);
     return response.data;
   } catch (error) {
